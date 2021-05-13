@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements Updatable {
         // Set up the buttons
         builder.setPositiveButton("OK", (dialog, whichBtn) ->{
             //alertText = input.getText().toString();
-            selectColorAlert();
             drawTextToBitmap(input.getText().toString());
         });
         builder.setNegativeButton("Cancel", (dialog, whichBtn) ->{
