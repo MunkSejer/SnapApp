@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1023137745358",
+    "project_id": "snapappdb",
+    "storage_bucket": "snapappdb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023137745358:android:815d81185c8db36922c39f",
+        "android_client_info": {
+          "package_name": "com.example.snapapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023137745358-cp05c09d3f7iumvlgpkqdbog8aq54j8i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtF7o77GAI7u3D6HGd8XiGfCEFY8CVrgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023137745358-cp05c09d3f7iumvlgpkqdbog8aq54j8i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
