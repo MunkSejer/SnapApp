@@ -4,7 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -145,25 +144,31 @@ public class MainActivity extends AppCompatActivity implements Updatable {
 
         builder.show();
     }
-    public String selectedcolor = "";
+    public String selectedColor = "";
     public int rgb;
     public void selectColorAlert(){
-        String[] colors = {"Red", "Blue", "Green", "Pink"};
+        String[] colors = {"Black","Red", "Blue", "Green", "Pink"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose text color");
+        rgb = Color.rgb(0, 0, 0);
         builder.setSingleChoiceItems(colors, 0, (dialog, which) -> {
-            selectedcolor = colors[which];
-            if(selectedcolor.equals("Red")){
-                rgb = Color.rgb(255,0,0);
-            }
-            if(selectedcolor.equals("Blue")){
-                rgb = Color.rgb(0,0,255);
-            }
-            if(selectedcolor.equals("Green")){
-                rgb = Color.rgb(0,255,0);
-            }
-            if(selectedcolor.equals("Pink")){
-                rgb = Color.rgb(255, 82, 223);
+            selectedColor = colors[which];
+            switch (selectedColor) {
+                case "Red":
+                    rgb = Color.rgb(255, 0, 0);
+                    break;
+                case "Blue":
+                    rgb = Color.rgb(0, 0, 255);
+                    break;
+                case "Green":
+                    rgb = Color.rgb(0, 255, 0);
+                    break;
+                case "Pink":
+                    rgb = Color.rgb(255, 82, 223);
+                    break;
+                case "Black":
+                    rgb = Color.rgb(0, 0, 0);
+                    break;
             }
             //Toast.makeText(MainActivity.this, "Color chosen" + which, Toast.LENGTH_SHORT).show();
         });
@@ -171,9 +176,11 @@ public class MainActivity extends AppCompatActivity implements Updatable {
             openAlertDialog();
             dialog.dismiss();
         });
-        builder.setNegativeButton("Exit", (dialog, which) ->
-            dialog.dismiss());
-            builder.show();
+        builder.setNegativeButton("Exit", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        builder.show();
     }
 
     @Override
