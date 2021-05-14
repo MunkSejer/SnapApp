@@ -23,7 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO; Commented methods: listViewSetUp() line 55, downloadImageFromFirebase(String, ImageView) from the Repository classe on line 105
+// TODO; Commented methods: listViewSetUp() line 55, downloadImageFromFirebase(String, ImageView) from the Repository class on line 105
 
 public class MainActivity extends AppCompatActivity implements Updatable {
 
