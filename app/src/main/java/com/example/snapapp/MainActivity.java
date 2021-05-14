@@ -23,6 +23,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO; Commented methods: listViewSetUp() line 55, downloadImageFromFirebase(String, ImageView) from the Repository classe on line 105
+
 public class MainActivity extends AppCompatActivity implements Updatable {
 
     private Adapter adapter;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements Updatable {
     private Button takePhoto;
     private ImageView imageView;
 
+    private Color color;
     public List<Snap> snapIDs = new ArrayList<>();
 
 
@@ -47,15 +50,27 @@ public class MainActivity extends AppCompatActivity implements Updatable {
         Repository.r().setUp(this, snapIDs);
     }
 
+
+    // Creates a listView of snaps when the app is started
     private void listViewSetUp() {
+        // finds the listView and is stored as a variable
         listView = findViewById(R.id.listView);
+        // An adapter is created with a constructor that takes a list of snaps as a parameter
+        // The adapter inflates a layout file (itemrow.xml) in the MainActivity (this) layout.
+        // in this case, it displays each item of the snapIDs arraylist.
         adapter = new Adapter(snapIDs, this);
+        // The created adapter is set into the listView
         listView.setAdapter(adapter);
 
+        // An onItemClickListener is being called whenever an item on the list has been clicked on by the user.
         listView.setOnItemClickListener((parent, view, position, id) ->{
-            // Intent to navigate to SnapViewActivity
+            // Intent to navigate from MainActivity to SnapViewActivity
             Intent intent = new Intent(MainActivity.this, SnapViewActivity.class);
+            // Data is being added to the intent to be used in the SnapViewActivity class
+            // In this case the id of the snap at the given position is being sent.
+            // This position is determined by which index has been clicked by the user.
             intent.putExtra("snapId", snapIDs.get(position).getId());
+            // starts the activity
             startActivity(intent);
         });
     }
@@ -69,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements Updatable {
             imageBitmap = (Bitmap) extras.get("data");
             //Bitmap manipulatedImage = drawTextToBitmap(alertText);
             //imageView.setImageBitmap(manipulatedImage);
-            openAlertDialog();
+            selectColorAlert();
             //imageView.setImageBitmap(imageBitmap);
         }
     }
@@ -90,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements Updatable {
 
 
 
-    public void drawTextToBitmap(String gText) {
+    public void drawTextToBitmap(String gText, int rgb) {
         Bitmap.Config bitmapConfig = imageBitmap.getConfig();
         // set default bitmap config if none
         if(bitmapConfig == null) {
@@ -101,14 +116,14 @@ public class MainActivity extends AppCompatActivity implements Updatable {
         Bitmap manipulatedImageBitmap = imageBitmap.copy(bitmapConfig, true);
         Canvas canvas = new Canvas(manipulatedImageBitmap);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);// new antialised Paint
-        paint.setColor(Color.rgb(252, 3,3));
+        paint.setColor(rgb);
         paint.setTextSize((int) (20)); // text size in pixels
         paint.setShadowLayer(1f, 0f, 1f, Color.WHITE); // text shadow
-        canvas.drawText(gText, 10, 100, paint);
+        canvas.drawText(gText, 10, 50, paint);
         Repository.r().uploadBitmapToFirebase(manipulatedImageBitmap, gText);
         imageView.setImageBitmap(manipulatedImageBitmap);
         //return manipulatedImageBitmap;
-        Toast.makeText(this, "Upload succesfull", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Upload successful", Toast.LENGTH_SHORT).show();
     }
 
     public void openAlertDialog(){
@@ -122,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements Updatable {
         // Set up the buttons
         builder.setPositiveButton("OK", (dialog, whichBtn) ->{
             //alertText = input.getText().toString();
-            drawTextToBitmap(input.getText().toString());
+            drawTextToBitmap(input.getText().toString(), rgb);
         });
         builder.setNegativeButton("Cancel", (dialog, whichBtn) ->{
             dialog.cancel();
@@ -131,31 +146,34 @@ public class MainActivity extends AppCompatActivity implements Updatable {
         builder.show();
     }
     public String selectedcolor = "";
-
+    public int rgb;
     public void selectColorAlert(){
-        String[] colors = {"Red", "Blue", "Greem"};
+        String[] colors = {"Red", "Blue", "Green", "Pink"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("ChooseText Color");
-        builder.setSingleChoiceItems(colors, 0, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                selectedcolor = colors[which];
-                Toast.makeText(MainActivity.this, "Color chosen" + which, Toast.LENGTH_SHORT).show();
+        builder.setTitle("Choose text color");
+        builder.setSingleChoiceItems(colors, 0, (dialog, which) -> {
+            selectedcolor = colors[which];
+            if(selectedcolor.equals("Red")){
+                rgb = Color.rgb(255,0,0);
             }
-        });
-        builder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            if(selectedcolor.equals("Blue")){
+                rgb = Color.rgb(0,0,255);
             }
-        });
-        builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            if(selectedcolor.equals("Green")){
+                rgb = Color.rgb(0,255,0);
             }
+            if(selectedcolor.equals("Pink")){
+                rgb = Color.rgb(255, 82, 223);
+            }
+            //Toast.makeText(MainActivity.this, "Color chosen" + which, Toast.LENGTH_SHORT).show();
         });
-        builder.show();
+        builder.setPositiveButton("Proceed", (dialog, which) -> {
+            openAlertDialog();
+            dialog.dismiss();
+        });
+        builder.setNegativeButton("Exit", (dialog, which) ->
+            dialog.dismiss());
+            builder.show();
     }
 
     @Override
